@@ -1,0 +1,58 @@
+@startuml homework
+class Project {
+ - _project_id_counter: int
+ # _project_id: str
+ # _name: str
+ # _budget: float
+ # _start_date: str
+ # _end_date: str
+ - _expenses: list[Expense]
+ + __init__(name: str, budget: float, start_date: str, end_date: str)
+ + project_id: str
+ + name: str
+ + budget: float
+ + start_date: str
+ + end_date: str
+ + add_expense(expense: Expense)
+ + get_total_expenses(): float
+ + get_remaining_budget(): float
+ + __str__(): str
+}
+
+class Expense {
+ {static} - _expense_id_counter: int
+ # _expense_id: int
+ # _description: str
+ # _amount: float
+ # _date: str
+ + __init__(description: str, amount: float, date: str)
+ + expense_id: int
+ + description: str
+ + amount: float
+ + date: str
+ + __str__(): str
+}
+
+class PersonnelExpense{
+ - hours_worked: float
+ - hourly_rate: float
+ + __str__(): str
+}
+
+class MaterialExpense {
+ - quantity: int
+ - unit_price: float
+ + __str__(): str
+}
+
+class TravelExpense{
+ - destination: str
+ - transport_cost: float
+   + __str__(): str
+}
+
+Project *-- Expense : contains
+Expense <|-- PersonnelExpense
+Expense <|-- MaterialExpense
+Expense <|-- TravelExpense
+@enduml

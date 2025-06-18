@@ -46,16 +46,31 @@ class LibraryManager:
         print('6. Exit.')
     
     def add_book(self):
-        pass
+        title = input('Enter book title: ')
+        author = input('Enter book author: ')
+        price = float(input('Enter book price: '))
+        new_book = Book(title, author, price)
+        # add new book
+        self.lib.add(new_book)
 
     def borrow_book(self):
-        pass
+        book_no = int(input('Enter book number to borrow: '))
+        book = self.lib.get_book(book_no - 1)   # because of 0-index vs 1-index
+        if book != None:
+            self.lib.borrow(book)
 
     def return_book(self):
-        pass
+        book_no = int(input('Enter book number to return: '))
+        book = self.lib.get_book(book_no - 1)
+        
+        if book != None:
+            self.lib.get_back(book)
 
     def remove_book(self):
-        pass
+        book_no = int(input('Enter book number to remove: '))
+        book = self.lib.get_book(book_no - 1)
+        if book != None:
+            self.lib.remove(book)
 
     def display_books(self):
         self.lib.show_books()

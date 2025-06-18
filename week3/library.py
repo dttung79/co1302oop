@@ -31,8 +31,17 @@ class Library:
     
     def show_books(self):
         print('All book in the library: ')
-        for book in self.__books:
+        for i in range(len(self.__books)):
+            book = self.__books[i]
+            print(f'{i + 1}. ', end='')
             book.display()
+        
+    def get_book(self, book_no):
+        if book_no < 0 or book_no >= len(self.__books):
+            print('Invalid book number')
+            return
+        
+        return self.__books[book_no]
 
 if __name__ == '__main__':
     python_book = Book('Python Programming', 'John Doe', 20)

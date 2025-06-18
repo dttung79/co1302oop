@@ -53,4 +53,5 @@ class Book:
 
     
     def display(self):
-        print(f'Title: {self.__title}, author: {self.__author}, price: ${self.__price}')
+        status = 'Available' if self.__status == True else 'Borrowed'
+        print(f'Title: {self.__title}, author: {self.__author}, price: ${self.__price}, status: {status}')

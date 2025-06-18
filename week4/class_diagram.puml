@@ -1,0 +1,62 @@
+@startuml Class Diagram
+
+class Employee {
+    + {static} _id_count: int
+    + {static} _basic_salary: int
+    # _eid: int
+    # _name: str
+    # _salary_rate: float
+    + __init__(name: str, salary_rate: float)
+    - __set_eid(): void
+    + eid: int <<property>>
+    + name: str <<property>>
+    + name(new_name: str): void <<setter>>
+    + salary_rate: float <<property>>
+    + salary_rate(new_rate: float): void <<setter>>
+    + __str__(): str
+}
+
+class FullTime {
+    - __insurance: float
+    + __init__(name: str, salary_rate: float, insurance: float)
+    + insurance: float <<property>>
+    + insurance(new_insurance: float): void <<setter>>
+    + salary: float <<property>>
+    + __str__(): str
+}
+
+class PartTime {
+    - __week_hours: int
+    + __init__(name: str, salary_rate: float, week_hours: int)
+    + week_hours: int <<property>>
+    + week_hours(new_hours: int): void <<setter>>
+    + salary: float <<property>>
+    + __str__(): str
+}
+
+class Freelancer {
+    - __job: Job
+    + __init__(name: str, salary_rate: float, job: Job)
+    + job: Job <<property>>
+    + job(new_job: Job): void <<setter>>
+    + salary: float <<property>>
+    + __str__(): str
+}
+
+class Job {
+    - __name: str
+    - __man_month: float
+    + __init__(name: str, man_month: float)
+    + name: str <<property>>
+    + name(new_name: str): void <<setter>>
+    + man_month: float <<property>>
+    + man_month(new_mm: float): void <<setter>>
+    + __str__(): str
+}
+
+Employee <|-- FullTime
+Employee <|-- PartTime
+Employee <|-- Freelancer
+Freelancer --> Job : uses
+
+@enduml
