@@ -44,6 +44,10 @@ class Employee:
         
         self._salary_rate = new_rate
 
+    @property
+    def salary(self):
+        return 0
+    
     def __str__(self):
         return f'{self._eid}: {self._name}, rate: {self._salary_rate:.2f}'
     
