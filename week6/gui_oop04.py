@@ -1,5 +1,7 @@
+import csv
 from tkinter import *
 from tkinter import messagebox as mb
+from tkinter.filedialog import asksaveasfilename, askopenfilename
 from book import Book
 class BookListGUI:
     def __init__(self):
@@ -12,19 +14,56 @@ class BookListGUI:
         self.window.geometry("800x300")
 
     def __load_books(self):
-        # create some sample books
-        python = Book("Python Programming", "John Doe", 29.99)
-        java = Book("Java Fundamentals", "Jane Smith", 39.99)
-        csharp = Book("C# Basics", "Alice Johnson", 34.99)
-        # assume csharp is borrowed
-        csharp.borrow()
-        # add books to the list
-        self.books = [python, java, csharp]
-        # insert books' titles into the listbox
+        f = askopenfilename(filetypes=[("CSV files", "*.csv"),
+                                        ("All files", "*.*")])
+        if not f:
+            mb.showwarning("Load Books", "No file selected.")
+            return
+        
+        # clear list & listbox
+        self.books = []
         self.lst_books.delete(0, END)  # Clear the listbox
-        for book in self.books:
-            self.lst_books.insert(END, f"{book.title}")
+
+        # open the file and read the books
+        try:
+            with open(f, "r", newline="") as csvfile:
+                reader = csv.reader(csvfile)
+                next(reader)  # Skip the header row
+                for row in reader:
+                    title = row[0]
+                    author = row[1]
+                    price = float(row[2])
+                    available = row[3]
+                    book = Book(title, author, price)
+                    if available == 'True':
+                        book.get_back()
+                    else:
+                        book.borrow()
+                    self.books.append(book)
+                    self.lst_books.insert(END, f"{book.title}")
+        except Exception as e:
+            mb.showerror("Load Books", f"Error loading books: {e}")
+            return
     
+    def __save_books(self):
+        # open a file to save the books
+        save_file_dlg = asksaveasfilename(defaultextension=".csv",
+                                                        filetypes=[("CSV files", "*.csv"), 
+                                                                     ("All files", "*.*")])
+        if not save_file_dlg:
+            mb.showwarning("Save Books", "No file selected.")
+            return
+        
+        try:
+            with open(save_file_dlg, "w", newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(["Title", "Author", "Price", "Available"])
+                for book in self.books:
+                    writer.writerow([book.title, book.author, book.price, book.status])
+            mb.showinfo("Save Books", "Books saved successfully.")
+        except Exception as e:
+            mb.showerror("Save Books", f"Error saving books: {e}")
+
     def __lst_books_select(self, event):
         # get the selected book index
         index = self.lst_books.curselection()[0]
@@ -50,41 +89,44 @@ class BookListGUI:
         self.btn_load = Button(self.window, text="Load", command=self.__load_books)
         self.btn_load.grid(row=0, column=1, padx=5, pady=5, sticky=E)
 
+        self.btn_save = Button(self.window, text="Save", command=self.__save_books)
+        self.btn_save.grid(row=0, column=2, padx=5, pady=5, sticky=E)
+
         self.lst_books = Listbox(self.window, width=40, height=10, selectmode=SINGLE,               
                                                                         exportselection=False)
-        self.lst_books.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, pady=5)
+        self.lst_books.grid(row=1, column=0, columnspan=3, rowspan=4, padx=5, pady=5)
         # bind the select event to the listbox
         self.lst_books.bind('<<ListboxSelect>>', self.__lst_books_select)
 
         self.lbl_title = Label(self.window, text="Title:")
-        self.lbl_title.grid(row=1, column=2, padx=5, pady=5, sticky=W)
+        self.lbl_title.grid(row=1, column=3, padx=5, pady=5, sticky=W)
 
         self.txt_title = Entry(self.window, width=30)
-        self.txt_title.grid(row=1, column=3, columnspan=2, padx=5, pady=5)
+        self.txt_title.grid(row=1, column=4, columnspan=2, padx=5, pady=5)
 
         self.lbl_author = Label(self.window, text="Author:")
-        self.lbl_author.grid(row=2, column=2, padx=5, pady=5, sticky=W)
+        self.lbl_author.grid(row=2, column=3, padx=5, pady=5, sticky=W)
 
         self.txt_author = Entry(self.window, width=30)
-        self.txt_author.grid(row=2, column=3, columnspan=2, padx=5, pady=5)
+        self.txt_author.grid(row=2, column=4, columnspan=2, padx=5, pady=5)
 
         self.lbl_price = Label(self.window, text="Price:")
-        self.lbl_price.grid(row=3, column=2, padx=5, pady=5, sticky=W)
+        self.lbl_price.grid(row=3, column=3, padx=5, pady=5, sticky=W)
 
         self.txt_price = Entry(self.window, width=30)
-        self.txt_price.grid(row=3, column=3, columnspan=2, padx=5, pady=5)
+        self.txt_price.grid(row=3, column=4, columnspan=2, padx=5, pady=5)
 
         self.lbl_available = Label(self.window, text="Available:")
-        self.lbl_available.grid(row=4, column=2, padx=5, pady=5, sticky=W)
+        self.lbl_available.grid(row=4, column=3, padx=5, pady=5, sticky=W)
 
         self.available_var = IntVar()
         self.available_var.set(1)
 
         self.rd_available = Radiobutton(self.window, text="Yes", variable=self.available_var, value=1)
-        self.rd_available.grid(row=4, column=3, padx=5, pady=5, sticky=W)
+        self.rd_available.grid(row=4, column=4, padx=5, pady=5, sticky=W)
 
         self.rd_unavailable = Radiobutton(self.window, text="No", variable=self.available_var, value=0)
-        self.rd_unavailable.grid(row=4, column=4, padx=5, pady=5, sticky=W)
+        self.rd_unavailable.grid(row=4, column=5, padx=5, pady=5, sticky=W)
 
     def run(self):
         self.window.mainloop()
