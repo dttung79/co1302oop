@@ -70,12 +70,9 @@ class BookListGUI:
         # get the selected book 
         book = self.books[index]
         # set the book details in the entry fields
-        self.txt_title.delete(0, END)
-        self.txt_title.insert(0, book.title)
-        self.txt_author.delete(0, END)
-        self.txt_author.insert(0, book.author)
-        self.txt_price.delete(0, END)
-        self.txt_price.insert(0, book.price)
+        self.title_var.set(book.title)
+        self.author_var.set(book.author)
+        self.price_var.set(book.price)
 
         if book.status == True:
             self.available_var.set(1)
@@ -101,19 +98,22 @@ class BookListGUI:
         self.lbl_title = Label(self.window, text="Title:")
         self.lbl_title.grid(row=1, column=3, padx=5, pady=5, sticky=W)
 
-        self.txt_title = Entry(self.window, width=30)
+        self.title_var = StringVar()
+        self.txt_title = Entry(self.window, width=30, textvariable=self.title_var)
         self.txt_title.grid(row=1, column=4, columnspan=2, padx=5, pady=5)
 
         self.lbl_author = Label(self.window, text="Author:")
         self.lbl_author.grid(row=2, column=3, padx=5, pady=5, sticky=W)
 
-        self.txt_author = Entry(self.window, width=30)
+        self.author_var = StringVar()
+        self.txt_author = Entry(self.window, width=30, textvariable=self.author_var)
         self.txt_author.grid(row=2, column=4, columnspan=2, padx=5, pady=5)
 
         self.lbl_price = Label(self.window, text="Price:")
         self.lbl_price.grid(row=3, column=3, padx=5, pady=5, sticky=W)
 
-        self.txt_price = Entry(self.window, width=30)
+        self.price_var = StringVar()
+        self.txt_price = Entry(self.window, width=30, textvariable=self.price_var)
         self.txt_price.grid(row=3, column=4, columnspan=2, padx=5, pady=5)
 
         self.lbl_available = Label(self.window, text="Available:")
@@ -127,6 +127,73 @@ class BookListGUI:
 
         self.rd_unavailable = Radiobutton(self.window, text="No", variable=self.available_var, value=0)
         self.rd_unavailable.grid(row=4, column=5, padx=5, pady=5, sticky=W)
+
+        self.btn_add = Button(self.window, text="Add", command=self.__add_book)
+        self.btn_add.grid(row=5, column=4, padx=5, pady=5, sticky=W)
+
+        self.btn_delete = Button(self.window, text="Delete", command=self.__delete_book)
+        self.btn_delete.grid(row=5, column=5, padx=5, pady=5, sticky=W)
+
+        self.btn_borrow = Button(self.window, text="Borrow", command=self.__borrow_book)
+        self.btn_borrow.grid(row=6, column=4, padx=5, pady=5, sticky=W)
+
+        self.btn_return = Button(self.window, text="Return", command=self.__return_book)
+        self.btn_return.grid(row=6, column=5, padx=5, pady=5, sticky=W)
+    
+    def __return_book(self):
+        selected_index = self.lst_books.curselection()[0]
+        if selected_index < 0:
+            mb.showwarning("Return Book", "No book selected.")
+            return
+        book = self.books[selected_index]
+        if self.available_var.get() == 1:
+            mb.showwarning("Return Book", f"Book '{book.title}' is already available.")
+            return
+        book.get_back()
+        self.available_var.set(1)
+        mb.showinfo("Return Book", f"Book '{book.title}' returned successfully.")
+
+    def __borrow_book(self):
+        selected_index = self.lst_books.curselection()[0]
+        if selected_index < 0:
+            mb.showwarning("Borrow Book", "No book selected.")
+            return
+        book = self.books[selected_index]
+        if self.available_var.get() == 0:
+            mb.showwarning("Borrow Book", f"Book '{book.title}' is not available.")
+            return
+        book.borrow()
+        self.available_var.set(0)
+        mb.showinfo("Borrow Book", f"Book '{book.title}' borrowed successfully.")
+
+    def __add_book(self):
+        try:
+            title = self.title_var.get()
+            author = self.author_var.get()
+            if not title or not author:
+                mb.showerror("Add Book", "Title and Author cannot be empty.")
+                return
+            price = float(self.price_var.get())
+            book = Book(title, author, price)
+
+            self.books.append(book)
+            self.lst_books.insert(END, f"{book.title}")
+        
+            mb.showinfo("Add Book", f"Book '{book.title}' added successfully.")
+        except ValueError:
+            mb.showerror("Add Book", "Invalid price. Please enter a valid number.")
+
+    def __delete_book(self):
+        selected_index = self.lst_books.curselection()[0]
+        if selected_index < 0:
+            mb.showwarning("Delete Book", "No book selected.")
+            return
+        # get the selected book
+        book = self.books[selected_index]
+        # remove the book from the list & listbox
+        del self.books[selected_index]
+        self.lst_books.delete(selected_index)
+        mb.showinfo("Delete Book", f"Book '{book.title}' deleted successfully.")
 
     def run(self):
         self.window.mainloop()
