@@ -1,0 +1,93 @@
+from demo_functions import add, convert
+
+def test_add_01():
+    a = 4
+    b = 5
+    expected = 9
+    result = add(a, b)
+    assert result == expected
+
+def test_add_02():
+    a = 4
+    b = 0
+    expected = 4
+    result = add(a, b)
+    assert result == expected
+
+
+def test_convert_01():
+    n = 5
+    c = '*'
+    expected = '*****'
+    result = convert(n, c)
+    assert result == expected
+
+def test_convert_02():
+    n = 5
+    c = '+'
+    expected = '+++++'
+    result = convert(n, c)
+    assert result == expected
+
+def test_convert_03():
+    n = 25
+    c = '*'
+    expected = '*************************'
+    result = convert(n, c)
+    assert result == expected
+
+def test_convert_04():
+    n = 26
+    c = '*'
+    expected = '*************************'
+    result = convert(n, c)
+    assert result == expected
+
+def test_convert_05():
+    n = 0
+    c = '*'
+    expected = ''
+    result = convert(n, c)
+    assert result == expected
+
+def test_convert_06():
+    n = -1
+    c = '*'
+    expected = 'Error'
+    result = convert(n, c)
+    assert result == expected
+
+def test_convert_07():
+    n = -100
+    c = '*'
+    expected = 'Error'
+    result = convert(n, c)
+    assert result == expected
+
+def test_convert_08():
+    n = 5
+    c = ''
+    expected = 'Error'
+    result = convert(n, c)
+    assert result == expected
+
+def test_convert_09():
+    n = 5
+    c = '++'
+    expected = 'Error'
+    result = convert(n, c)
+    assert result == expected
+
+def test_convert_10():
+    n = 50000000
+    c = '*'
+    expected = '*************************'
+    result = convert(n, c)
+    assert result == expected
+
+def test_convert_11():
+    n = 5.0
+    c = '*'
+    expected = 'Error'
+    result = convert(n, c)
+    assert result == expected
