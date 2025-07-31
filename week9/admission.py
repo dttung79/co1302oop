@@ -23,8 +23,11 @@ class Admission:
             print(s)
 
     def inform(self, student, accept_grade):
-        print(f"Hi, I am {self.name} from the admission office.")
+        print(f"Hi {student.name}, I am {self.name} from the admission office.")
         if student.is_accepted(accept_grade):
             print("I am happy to inform you that you have been accepted!")
         else:
             print("I am sorry to inform you that you have not been accepted.")
+
+    def get_student(self, index):
+        return self.__students[index]
