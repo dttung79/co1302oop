@@ -53,30 +53,46 @@ def test_convert_05():
 def test_convert_06():
     n = -1
     c = '*'
-    expected = 'Error'
-    result = convert(n, c)
-    assert result == expected
+    expected_message = 'n must be a positive integer'
+    try:
+        result = convert(n, c)
+        # if no exception is raised, the test fails
+        assert False
+    except ValueError as e: # if ValueError is raised, code is correct
+        assert str(e) == expected_message # but the error message must be correct
 
 def test_convert_07():
     n = -100
     c = '*'
-    expected = 'Error'
-    result = convert(n, c)
-    assert result == expected
+    expected_message = 'n must be a positive integer'
+    try:
+        result = convert(n, c)
+        # if no exception is raised, the test fails
+        assert False
+    except ValueError as e: # if ValueError is raised, code is correct
+        assert str(e) == expected_message # but the error message must be correct
 
 def test_convert_08():
     n = 5
     c = ''
-    expected = 'Error'
-    result = convert(n, c)
-    assert result == expected
+    expected_message = 'c must be a character'
+    try:
+        result = convert(n, c)
+        # if no exception is raised, the test fails
+        assert False
+    except ValueError as e: # if ValueError is raised, code is correct
+        assert str(e) == expected_message # but the error message must be correct
 
 def test_convert_09():
     n = 5
     c = '++'
-    expected = 'Error'
-    result = convert(n, c)
-    assert result == expected
+    expected_message = 'c must be a character'
+    try:
+        result = convert(n, c)
+        # if no exception is raised, the test fails
+        assert False
+    except ValueError as e: # if ValueError is raised, code is correct
+        assert str(e) == expected_message # but the error message must be correct
 
 def test_convert_10():
     n = 50000000
@@ -88,6 +104,10 @@ def test_convert_10():
 def test_convert_11():
     n = 5.0
     c = '*'
-    expected = 'Error'
-    result = convert(n, c)
-    assert result == expected
+    expected_message = 'n must be an integer'
+    try:
+        result = convert(n, c)
+        # if no exception is raised, the test fails
+        assert False
+    except ValueError as e: # if ValueError is raised, code is correct
+        assert str(e) == expected_message # but the error message must be correct

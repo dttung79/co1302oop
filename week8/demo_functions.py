@@ -5,19 +5,20 @@ def add(a, b):
 
 def convert(n, c):
     if not isinstance(c, str):
-        return 'Error'
+        raise ValueError('c must be a string')
     
     if len(c) == 0 or len(c) > 1:
-        return 'Error'
+        raise ValueError('c must be a character')
 
     if not isinstance(n, int):
-        return 'Error'
+        raise ValueError('n must be an integer')
     
     if n == 0:
         return ''
     
     if n < 0:
-        return 'Error'
+        raise ValueError('n must be a positive integer')
+        #return 'Error'
     
     if n > 25:
         return c * 25
